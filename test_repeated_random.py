@@ -66,4 +66,4 @@ for case in cases:
     assert_encodes_expected(case, 'minimum')
     assert_encodes_expected(case, 'satisfactory')
     assert_encodes_expected(case, 'delightful')
-log('\nAll tests passed.\n')
+log('\nTest passed.\n')
