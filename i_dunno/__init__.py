@@ -136,15 +136,7 @@ def encode(addr, level='minimum'):
 
     The output of this function MAY be presented to humans, as recommended by RFC8771.
     """
-    if level not in confusion_levels:
-        raise ValueError(f'unknown confusion level: {level}')
-
-    bits = bytes_to_bits(addr.packed)
-
-    candidates = filter(
-        lambda bytestr: confusion_check(bytestr, level, confusion_levels, confusion_constraints),
-        packed_combinations(tuple(bits), tuple(utf8_lengths))
-    )
+    candidates = encode_all(addr, level=level)
 
     # Select candidates in limited-size groups, so we can handle addresses
     # that allow very large numbers of encodings without poor performance.
@@ -154,6 +146,32 @@ def encode(addr, level='minimum'):
             return random.choice(bytestrs)
 
     raise ValueError(f'could not represent given address "{addr}" as valid I-DUNNO at confusion level "{level}"')
+
+
+def encode_all(addr, level='minimum'):
+    """
+    Encode an ipaddress.IPv6Address or an ipaddress.IPv4Address object into
+    several valid I-DUNNO representations at the given confusion level.
+
+    Returns an iterator over as many valid encodings as can be found.
+
+    Returns an empty iterator if valid I-DUNNO for the given arguments does
+    not exist.
+
+    The output of this function should probably be hidden from humans under
+    normal circumstances, since seeing several encodings may cause an
+    unintended reduction in confusion.
+    """
+    if level not in confusion_levels:
+        raise ValueError(f'unknown confusion level: {level}')
+
+    bits = bytes_to_bits(addr.packed)
+
+    return filter(
+        lambda bytestr:confusion_check(
+            bytestr, level, confusion_levels, confusion_constraints),
+        packed_combinations(tuple(bits), tuple(utf8_lengths))
+    )
 
 
 def decode(i_dunno):
