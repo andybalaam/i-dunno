@@ -13,15 +13,7 @@ def hx(list_of_bytestr):
 
 
 def enc(addr, level):
-    encs = set()
-    # To make our example list reasonably reliable, run encode many
-    # times, and collect all the answers.
-    for i in range(100):
-        try:
-            encs.add(i_dunno.encode(addr, level=level))
-        except ValueError:
-            pass # No encodings at this level, which is fine
-    return hx(encs)
+    return hx(i_dunno.encode_all(addr, level=level))
 
 
 def print_encodings(new_addr, num):
