@@ -13,7 +13,7 @@ MAX_ENCODINGS = 10
 
 
 def hx(list_of_bytestr):
-    return list(bytestr.hex() for bytestr in list_of_bytestr)
+    return list(sorted(bytestr.hex() for bytestr in list_of_bytestr))
 
 
 def enc(addr, level):
